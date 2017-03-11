@@ -116,17 +116,18 @@ PROXIES = [
 ]
 
 DEFAULT_REQUEST_HEADERS = {
-    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:47.0) Gecko/20100101 Firefox/47.0',
+    # 'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:47.0) Gecko/20100101 Firefox/47.0',
+    'User-Agent': '* Baiduspider+(+http://www.baidu.com/search/spider.htm”)',
     'Connection': 'keep-alive',
-    'Referer': 'http://list.jd.com/list.html?cat=1713,3258,3299',
+    'Referer': 'http://book.jd.com/booksort.html',
 }
 
 WORKING_DIR = 'work/'
 FINISH_DIR = 'down/'
 
 MONGODB = {
-    'SERVER': 'mongo',
-    'PORT': 27017,
+    'SERVER': 'localhost',
+    'PORT': 32777,
     'DB_NAME': 'jd_spider',
     'COLLECTION': 'book_item'
 }

@@ -15,7 +15,7 @@ class JdListSpider(scrapy.Spider):
     sub_page_link = 'http://list.jd.com/list.html?cat=%s&page=%d&delivery=1&stock=0&sort=sort_rank_asc&trans=1&JL=4_10_0#J_main'
     item_price_link = 'http://pm.3.cn/prices/pcpmgets?skuids=%s&origin=2'
     item_comment_link = 'https://club.jd.com/comment/productCommentSummaries.action?referenceIds=%s'
-    url = 'http://list.jd.com/list.html?cat=1713,3258,3299&page=1&delivery=1&stock=0&sort=sort_rank_asc&trans=1&JL=4_10_0'
+    url = 'http://book.jd.com/booksort.html'
     cookies = {
         'listck': '297681d41d4f7c65de8eedda499114c7',
         '__jda': '122270672.656184210.1480935749.1489174045.1489177289.66'
@@ -24,18 +24,19 @@ class JdListSpider(scrapy.Spider):
     def start_requests(self):
         return [scrapy.Request(url=self.url, callback=self.parse, cookies=self.cookies)]
 
-    # def parse(self, response):
-    #     for sku in response.css('.mc dd a::attr(href)').re(r'\d+-\d+-\d+'):
-    #         url = self.sub_page_link % (sku, 1)
-    #         if not sub_item_finish(sku):
-    #             yield scrapy.Request(url, meta={'sku': sku}, callback=self.parse_sub_page)
-
     def parse(self, response):
-        pages = int(response.css('.p-skip b::text').extract_first()) + 1
-        for page in range(1, pages):
-            cat = '1713,3258,3299'
-            url = self.sub_page_link % (cat, page)
-            yield scrapy.Request(url, meta={'cat': cat}, cookies=self.cookies, callback=self.parse_all_item_info)
+        for cat in response.css('.mc dd a::attr(href)').re(r'\d+-\d+-\d+'):
+            url = self.sub_page_link % (cat, 1)
+            # if not sub_item_finish(sku):
+            yield scrapy.Request(url, meta={'cat': cat}, callback=self.parse_sub_page)
+
+    def parse_sub_page(self, response):
+        pages = int(response.css('.p-skip b::text').extract_first())
+        if pages:
+            for page in range(1, pages + 1):
+                cat = response.meta['cat']
+                url = self.sub_page_link % (cat, page)
+                yield scrapy.Request(url, meta={'cat': cat}, cookies=self.cookies, callback=self.parse_all_item_info)
 
     def parse_all_item_info(self, response):
         category = response.css('.trigger .curr::text').extract()
