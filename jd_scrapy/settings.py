@@ -37,7 +37,7 @@ USER_AGENTS = [
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = False
-CONCURRENT_REQUESTS = 100
+CONCURRENT_REQUESTS = 32
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 # CONCURRENT_REQUESTS = 32
 
@@ -51,8 +51,8 @@ CONCURRENT_REQUESTS = 100
 
 # Disable cookies (enabled by default)
 COOKIES_ENABLED = True
-COOKIES_DEBUG = True
-# LOG_LEVEL = 'INFO'
+# COOKIES_DEBUG = True
+LOG_LEVEL = 'INFO'
 # REDIRECT_ENABLED = False
 # Disable Telnet Console (enabled by default)
 TELNETCONSOLE_ENABLED = True
@@ -126,8 +126,8 @@ WORKING_DIR = 'work/'
 FINISH_DIR = 'down/'
 
 MONGODB = {
-    'SERVER': 'localhost',
-    'PORT': 32777,
+    'SERVER': 'mongo',
+    'PORT': 27017,
     'DB_NAME': 'jd_spider',
-    'COLLECTION': 'book_item'
+    'COLLECTION': 'book_item2'
 }

@@ -17,8 +17,8 @@ class JdListSpider(scrapy.Spider):
     item_comment_link = 'https://club.jd.com/comment/productCommentSummaries.action?referenceIds=%s'
     url = 'http://book.jd.com/booksort.html'
     cookies = {
-        'listck': '297681d41d4f7c65de8eedda499114c7',
-        '__jda': '122270672.656184210.1480935749.1489174045.1489177289.66'
+        'listck': 'f24d7042ea27d536f60467e705280fa6',
+        '__jda': '122270672.1489256862989305248423.1489256863.1489256863.1489256863.1'
     }
 
     def start_requests(self):
@@ -32,7 +32,7 @@ class JdListSpider(scrapy.Spider):
 
     def parse_sub_page(self, response):
         pages = int(response.css('.p-skip b::text').extract_first())
-        if pages:
+        if type(pages) == type(1) or type(pages) == type('a'):
             for page in range(1, pages + 1):
                 cat = response.meta['cat']
                 url = self.sub_page_link % (cat, page)
