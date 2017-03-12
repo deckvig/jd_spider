@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 import json
-import os
 import re
 
 import scrapy
-from jd_scrapy.items import Jd_commodity_info
 from scrapy.utils.project import get_project_settings
+from selenium import webdriver
+
+from jd_scrapy.items import Jd_commodity_info
 
 
 class JdListSpider(scrapy.Spider):
@@ -14,7 +15,7 @@ class JdListSpider(scrapy.Spider):
     SETTING = get_project_settings()
     sub_page_link = 'http://list.jd.com/list.html?cat=%s&page=%d&delivery=1&stock=0&sort=sort_rank_asc&trans=1&JL=4_10_0#J_main'
     item_price_link = 'http://pm.3.cn/prices/pcpmgets?skuids=%s&origin=2'
-    item_comment_link = 'https://club.jd.com/comment/productCommentSummaries.action?referenceIds=%s'
+    # item_comment_link = 'https://club.jd.com/comment/productCommentSummaries.action?referenceIds=%s'
     url = 'http://book.jd.com/booksort.html'
     cookies = {
         'listck': 'f24d7042ea27d536f60467e705280fa6',
@@ -27,21 +28,27 @@ class JdListSpider(scrapy.Spider):
     def parse(self, response):
         for cat in response.css('.mc dd a::attr(href)').re(r'\d+-\d+-\d+'):
             url = self.sub_page_link % (cat, 1)
-            # if not sub_item_finish(sku):
             yield scrapy.Request(url, meta={'cat': cat}, callback=self.parse_sub_page)
 
     def parse_sub_page(self, response):
         pages = response.css('.fp-text i::text').extract_first()
         if pages != '0':
+            if pages != '1':
+                self.get_cookie(response.url)
             for page in range(1, int(pages) + 1):
                 cat = response.meta['cat']
                 url = self.sub_page_link % (cat, page)
-                yield scrapy.Request(url, meta={'cat': cat}, cookies=self.cookies, callback=self.parse_all_item_info)
+                meta = response.meta
+                meta['cookie_jar'] = 1
+                yield scrapy.Request(url, meta=meta, cookies=self.cookies, callback=self.parse_all_item_info)
 
     def parse_all_item_info(self, response):
+
         category = response.css('.trigger .curr::text').extract()
+
         items = response.css('.gl-item')
         re_n7 = re.compile(r'(\/n7\/)')
+
         for i in items:
             item = Jd_commodity_info()
             item['cat'] = response.meta['cat']
@@ -59,9 +66,12 @@ class JdListSpider(scrapy.Spider):
             item['shop_num'] = i.css('.curr-shop::text').extract_first()
             item['category'] = category
             url = self.item_price_link % item['sku']
-            yield scrapy.Request(url, meta={'item': item}, callback=self.parse_item_price)
+            meta = response.meta
+            meta['item'] = item
+            yield scrapy.Request(url, meta=meta, callback=self.parse_item_price)
 
     def parse_item_price(self, response):
+
         data = json.loads(response.body_as_unicode())[0]
         item = response.meta['item']
         item['selling_price'] = data['p']
@@ -72,3 +82,20 @@ class JdListSpider(scrapy.Spider):
         #     if os.path.isfile(SETTING['FINISH_DIR'] + filename):
         #         return True
         #     return False
+
+    def get_cookie(self, url):
+        service_args = []
+        service_args.append('--load-images=no')
+        service_args.append('--disk-cache=yes')
+        service_args.append('--ignore-ssl-errors=true')
+        browser = webdriver.PhantomJS('/usr/local/bin/phantomjs', service_args=service_args)
+
+        browser.get(url)
+        elem = browser.find_element_by_class_name('pn-next')
+        elem.click()
+        jda = browser.get_cookie('__jda')
+        listck = browser.get_cookie('listck')
+        self.cookies['__jda'] = jda['value']
+        self.cookies['listck'] = listck['value']
+        print("打印Cookies:", self.cookies)
+        browser.close()
