@@ -14,7 +14,7 @@ class JdScrapyItem(scrapy.Item):
     pass
 
 
-class Jd_commodity_info(scrapy.Item):
+class JdCommodityInfo(scrapy.Item):
     _id = scrapy.Field()
     cat = scrapy.Field()
     sku = scrapy.Field()
@@ -43,3 +43,10 @@ class Jd_commodity_info(scrapy.Item):
     poor_count = scrapy.Field()
     poor_rate = scrapy.Field()
     after_count = scrapy.Field()
+
+
+class BookCatItem(scrapy.Item):
+    id = scrapy.Field()
+    cat = scrapy.Field()
+    spider = scrapy.Field()
+    pages = scrapy.Field()

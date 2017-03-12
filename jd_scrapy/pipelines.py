@@ -22,7 +22,27 @@ class JdItemPipeline(object):
         self.server = MONGODB['SERVER']
         self.port = MONGODB['PORT']
         self.db_name = MONGODB['DB_NAME']
-        self.col_name = MONGODB['COLLECTION']
+        self.col_name = MONGODB['BOOK_ITEM']
+
+    def open_spider(self, spider):
+        self.mgo = MongoClient(self.server, self.port)
+        self.db = self.mgo[self.db_name]
+
+    def close_spider(self, spider):
+        self.mgo.close()
+
+    def process_item(self, item, spider):
+        self.db[self.col_name].insert(dict(item))
+        return item
+
+class JdCatPipeline(object):
+    def __init__(self):
+        settings = get_project_settings()
+        MONGODB = settings['MONGODB']
+        self.server = MONGODB['SERVER']
+        self.port = MONGODB['PORT']
+        self.db_name = MONGODB['DB_NAME']
+        self.col_name = MONGODB['BOOK_CAT']
 
     def open_spider(self, spider):
         self.mgo = MongoClient(self.server, self.port)

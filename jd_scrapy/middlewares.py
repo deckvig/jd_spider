@@ -82,4 +82,4 @@ class RandomUserAgentMiddleware(object):
         if ua:
             request.headers.setdefault('User-Agent', ua)
             request.headers.setdefault('Connection', 'keep-alive')
-            request.headers.setdefault('Referer', 'http://book.jd.com/booksort.html')
+            request.headers.setdefault('Referer', 'http://www.jd.com')

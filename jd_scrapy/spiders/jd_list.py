@@ -6,7 +6,7 @@ import scrapy
 from scrapy.utils.project import get_project_settings
 from selenium import webdriver
 
-from jd_scrapy.items import Jd_commodity_info
+from jd_scrapy.items import JdCommodityInfo
 
 
 class JdListSpider(scrapy.Spider):
@@ -50,7 +50,7 @@ class JdListSpider(scrapy.Spider):
         re_n7 = re.compile(r'(\/n7\/)')
 
         for i in items:
-            item = Jd_commodity_info()
+            item = JdCommodityInfo()
             item['cat'] = response.meta['cat']
             link = i.css('.p-name a::attr(href)')
             item['sku'] = link.re_first(r'\d+')
