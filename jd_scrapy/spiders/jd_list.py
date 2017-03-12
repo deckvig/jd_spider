@@ -31,9 +31,9 @@ class JdListSpider(scrapy.Spider):
             yield scrapy.Request(url, meta={'cat': cat}, callback=self.parse_sub_page)
 
     def parse_sub_page(self, response):
-        pages = int(response.css('.p-skip b::text').extract_first())
+        pages = response.css('.p-skip b::text').extract_first()
         if type(pages) == type(1) or type(pages) == type('a'):
-            for page in range(1, pages + 1):
+            for page in range(1, int(pages) + 1):
                 cat = response.meta['cat']
                 url = self.sub_page_link % (cat, page)
                 yield scrapy.Request(url, meta={'cat': cat}, cookies=self.cookies, callback=self.parse_all_item_info)
