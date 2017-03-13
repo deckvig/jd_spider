@@ -28,7 +28,7 @@ ROBOTSTXT_OBEY = False
 # See http://scrapy.readthedocs.org/en/latest/topics/settings.html#download-delay
 # See also autothrottle settings and docs
 # RANDOMIZE_DOWNLOAD_DELAY = True
-# DOWNLOAD_DELAY = 0.5  
+# DOWNLOAD_DELAY = 0.5
 # The download delay setting will honor only one of:
 # CONCURRENT_REQUESTS_PER_DOMAIN = 16
 # CONCURRENT_REQUESTS_PER_IP = 16
@@ -76,8 +76,8 @@ DOWNLOADER_MIDDLEWARES = {
 # Configure item pipelines
 # See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-    # 'jd_scrapy.pipelines.JdItemPipeline': 1,
-    'jd_scrapy.pipelines.JdCatPipeline': 1
+    'jd_scrapy.pipelines.JdItemPipeline': 1,
+    # 'jd_scrapy.pipelines.JdCatPipeline': 1
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
@@ -140,8 +140,8 @@ WORKING_DIR = 'work/'
 FINISH_DIR = 'down/'
 
 MONGODB = {
-    'SERVER': 'localhost',
-    'PORT': 32770,
+    'SERVER': 'mongo',
+    'PORT': 27017,
     'DB_NAME': 'jd_spider',
     'BOOK_ITEM': 'book_item',
     'BOOK_CAT': 'book_cat'
