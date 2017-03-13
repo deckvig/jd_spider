@@ -105,7 +105,7 @@ class JdListSpider(scrapy.Spider):
                 if key == price['id']:
                     item['selling_price'] = price['p']
                     item['fix_price'] = price['m']
-                    yield item
+                yield item
 
     def get_cookie(self, url):
         service_args = []
