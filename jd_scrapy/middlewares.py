@@ -4,9 +4,12 @@
 #
 # See documentation in:
 # http://doc.scrapy.org/en/latest/topics/spider-middleware.html
+import base64
 import random
 
 from scrapy import signals
+
+from jd_scrapy.settings import PROXIES
 
 
 class JdScrapySpiderMiddleware(object):
@@ -83,3 +86,10 @@ class RandomUserAgentMiddleware(object):
             request.headers.setdefault('User-Agent', ua)
             request.headers.setdefault('Connection', 'keep-alive')
             request.headers.setdefault('Referer', 'http://book.jd.com/booksort.html')
+
+
+class ProxyMiddleware(object):
+    def process_request(self, request, spider):
+        proxy = random.choice(PROXIES)
+        print("**************ProxyMiddleware no pass************" + proxy['ip_port'])
+        request.meta['proxy'] = "http://%s" % proxy['ip_port']

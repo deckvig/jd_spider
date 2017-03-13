@@ -20,7 +20,7 @@ NEWSPIDER_MODULE = 'jd_scrapy.spiders'
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = False
-# CONCURRENT_REQUESTS = 32
+CONCURRENT_REQUESTS = 1
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 # CONCURRENT_REQUESTS = 32
 
@@ -61,7 +61,10 @@ REDIRECT_ENABLED = False
 # }
 DOWNLOADER_MIDDLEWARES = {
     'jd_scrapy.middlewares.RandomUserAgentMiddleware': 1,
+    'jd_scrapy.middlewares.ProxyMiddleware': 100,
     'scrapy.contrib.downloadermiddleware.defaultheaders.DefaultHeadersMiddleware': None,
+    'scrapy.contrib.downloadermiddleware.httpproxy.HttpProxyMiddleware': 110,
+
 }
 
 # Enable or disable downloader middlewares
@@ -102,38 +105,33 @@ ITEM_PIPELINES = {
 
 
 PROXIES = [
-    {'ip_port': '171.36.154.217:8998', 'user_pass': ''},
-    {'ip_port': '101.31.63.250:8998', 'user_pass': ''},
-    {'ip_port': '119.90.24.24:80', 'user_pass': ''},
-    {'ip_port': '221.180.170.17:80', 'user_pass': ''},
-    {'ip_port': '123.166.39.112:8118', 'user_pass': ''},
-    {'ip_port': '114.239.3.27:808', 'user_pass': ''},
-    {'ip_port': '110.7.73.138:80', 'user_pass': ''},
-    {'ip_port': '175.155.25.13:808', 'user_pass': ''},
-    {'ip_port': '110.72.26.222:8123', 'user_pass': ''},
-    {'ip_port': '119.5.0.66:808', 'user_pass': ''},
-    {'ip_port': '110.73.4.242:8123', 'user_pass': ''},
-    {'ip_port': '220.166.243.22:8118', 'user_pass': ''},
-    {'ip_port': '106.46.136.230:808', 'user_pass': ''},
-    {'ip_port': '113.99.216.190:8081', 'user_pass': ''},
-    {'ip_port': '178.33.4.48:3128', 'user_pass': ''},
-    {'ip_port': '106.91.35.74:8998', 'user_pass': ''},
-    {'ip_port': '200.229.202.214:8080', 'user_pass': ''},
-    {'ip_port': '123.125.14.246:3128', 'user_pass': ''},
-    {'ip_port': '159.203.166.76:3128', 'user_pass': ''},
-    {'ip_port': '89.36.213.168:3128', 'user_pass': ''},
-    {'ip_port': '86.105.55.21:3128', 'user_pass': ''},
-    {'ip_port': '69.12.92.6:1080', 'user_pass': ''},
-    {'ip_port': '106.120.40.103:1080', 'user_pass': ''},
-    {'ip_port': '177.42.129.227:8080', 'user_pass': ''},
-    {'ip_port': '120.52.72.56:80', 'user_pass': ''},
-    {'ip_port': '124.88.67.14:843', 'user_pass': ''},
-    {'ip_port': '159.192.200.47:8080', 'user_pass': ''},
-    {'ip_port': '222.128.80.28:8081', 'user_pass': ''},
-    {'ip_port': '47.91.145.28:3128', 'user_pass': ''},
-    {'ip_port': '113.237.70.237:8081', 'user_pass': ''},
-    {'ip_port': '35.167.66.19:3128', 'user_pass': ''},
-    {'ip_port': '69.12.67.180:1080', 'user_pass': ''},
+    {'ip_port': '124.88.67.17:80', 'user_pass': ''},
+    {'ip_port': '121.193.143.249:80', 'user_pass': ''},
+    {'ip_port': '119.90.24.25:80', 'user_pass': ''},
+    {'ip_port': '221.180.170.2:80', 'user_pass': ''},
+    {'ip_port': '106.46.136.104:808', 'user_pass': ''},
+    {'ip_port': '106.46.136.162:808', 'user_pass': ''},
+    {'ip_port': '122.138.252.65:8118', 'user_pass': ''},
+    {'ip_port': '106.46.136.118:808', 'user_pass': ''},
+    {'ip_port': '106.46.136.98:808', 'user_pass': ''},
+    {'ip_port': '175.155.24.20:808', 'user_pass': ''},
+    {'ip_port': '106.120.78.129:80', 'user_pass': ''},
+    {'ip_port': '183.32.88.221:808', 'user_pass': ''},
+    {'ip_port': '122.229.17.128:80', 'user_pass': ''},
+    {'ip_port': '221.180.170.114:80', 'user_pass': ''},
+    {'ip_port': '175.21.193.200:8998', 'user_pass': ''},
+    {'ip_port': '115.110.118.62:3128', 'user_pass': ''},
+    {'ip_port': '5.2.69.135:1080', 'user_pass': ''},
+    {'ip_port': '175.18.12.144:8998', 'user_pass': ''},
+    {'ip_port': '86.105.55.118:80', 'user_pass': ''},
+    {'ip_port': '67.205.156.162:3128', 'user_pass': ''},
+    {'ip_port': '149.56.198.196:8080', 'user_pass': ''},
+    {'ip_port': '60.214.172.230:8081', 'user_pass': ''},
+    {'ip_port': '221.180.170.106:80', 'user_pass': ''},
+    {'ip_port': '221.180.170.107:80', 'user_pass': ''},
+    {'ip_port': '27.36.157.97:8998', 'user_pass': ''},
+    {'ip_port': '120.87.240.235:8998', 'user_pass': ''},
+    {'ip_port': '120.84.251.233:80', 'user_pass': ''},
 ]
 
 WORKING_DIR = 'work/'
@@ -143,6 +141,6 @@ MONGODB = {
     'SERVER': 'localhost',
     'PORT': 32770,
     'DB_NAME': 'jd_spider',
-    'BOOK_ITEM': 'book_item',
+    'BOOK_ITEM': 'book_item_multi',
     'BOOK_CAT': 'book_cat'
 }

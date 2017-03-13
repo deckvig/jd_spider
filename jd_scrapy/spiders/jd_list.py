@@ -26,10 +26,10 @@ class JdListSpider(scrapy.Spider):
         return [scrapy.Request(url=self.url, callback=self.parse)]
 
     def parse(self, response):
-        for cat in response.css('.mc dd a::attr(href)').re(r'\d+-\d+-\d+'):
+        for cat in response.css('.mc dd a::attr(href)').re(r'1713-3258-\d+'):
             cat = cat.replace('-', ',')
             url = self.sub_page_link % (cat, 1)
-            yield scrapy.Request(url, meta={'cat': cat}, callback=self.parse_sub_page)
+            return scrapy.Request(url, meta={'cat': cat}, callback=self.parse_sub_page)
 
     def parse_sub_page(self, response):
         pages = response.css('.fp-text i::text').extract_first()
@@ -41,7 +41,7 @@ class JdListSpider(scrapy.Spider):
                     'listck': '8690d16d60884c3c1a24a6c241f5f147',
                     '__jda': '122270672.1489407850144744927811.1489407850.1489407850.1489407850.1'
                 }
-            for page in range(1, int(pages) + 1):
+            for page in range(int(pages), 0, -1):
                 cat = response.meta['cat']
                 url = self.sub_page_link % (cat, page)
                 meta = response.meta
@@ -58,7 +58,7 @@ class JdListSpider(scrapy.Spider):
         re_n7 = re.compile(r'(\/n7\/)')
         sku = []
         itemss = {}
-        count = 0
+        # count = 0
         for i in items:
             item = JdCommodityInfo()
             item['cat'] = response.meta['cat']
@@ -78,16 +78,16 @@ class JdListSpider(scrapy.Spider):
             key = 'J_%s' % item['sku']
             itemss[key] = item
             sku.append(key)
-            count += 1
-            if count == 30:
-                url = self.item_price_link % ('%2C'.join(sku), uuid)
-                yield scrapy.Request(url, meta={'items': itemss}, callback=self.parse_item_price)
-                # print('parse_all_item_info',itemss)
-                itemss = {}
-                sku = []
-                count = 0
+            # count += 1
+            # if count == 60:
+            #     url = self.item_price_link % ('%2C'.join(sku), uuid)
+            #     yield scrapy.Request(url, meta={'items': itemss}, callback=self.parse_item_price)
+            #     # print('parse_all_item_info',itemss)
+            #     itemss = {}
+            #     sku = []
+            #     count = 0
         if len(sku):
-            url = self.item_price_link % ('%2C'.join(sku), uuid)
+            url = self.item_price_link % ("%2C" + '%2C'.join(sku), uuid)
             # print('parse_all_item_info',itemss)
             yield scrapy.Request(url, meta={'items': itemss}, callback=self.parse_item_price)
 
