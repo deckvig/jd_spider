@@ -113,13 +113,16 @@ class JdListSpider(scrapy.Spider):
         service_args.append('--disk-cache=yes')
         service_args.append('--ignore-ssl-errors=true')
         browser = webdriver.PhantomJS('/usr/local/bin/phantomjs', service_args=service_args)
-
-        browser.get(url)
-        elem = browser.find_element_by_class_name('pn-next')
-        elem.click()
-        jda = browser.get_cookie('__jda')
-        listck = browser.get_cookie('listck')
-        cookies = {'__jda': jda['value'], 'listck': listck['value']}
-        # print("打印Cookies:", self.cookies)
-        browser.close()
-        return cookies
+        while True:
+            try:
+                browser.get(url)
+                elem = browser.find_element_by_class_name('pn-next')
+                elem.click()
+                jda = browser.get_cookie('__jda')
+                listck = browser.get_cookie('listck')
+                cookies = {'__jda': jda['value'], 'listck': listck['value']}
+                # print("打印Cookies:", self.cookies)
+                browser.close()
+                return cookies
+            except:
+                pass
