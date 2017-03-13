@@ -15,15 +15,15 @@ class JdListSpider(scrapy.Spider):
     SETTING = get_project_settings()
     sub_page_link = 'http://list.jd.com/list.html?cat=%s&page=%d&delivery=1&stock=0&sort=sort_rank_asc&trans=1&JL=4_10_0#J_main'
     item_price_link = 'http://p.3.cn/prices/mgets?skuIds==%s&pduid=%s'
-    # item_comment_link = 'https://club.jd.com/comment/productCommentSummaries.action?referenceIds=%s'
     url = 'http://book.jd.com/booksort.html'
-    cookies = {
-        'listck': '407d46c070524314b37f39277fd821dd',
-        '__jda': '122270672.1489374677544638146764.1489374678.1489374678.1489374678.1'
-    }
+
+    # cookies = {
+    #     'listck': '407d46c070524314b37f39277fd821dd',
+    #     '__jda': '122270672.1489374677544638146764.1489374678.1489374678.1489374678.1'
+    # }
 
     def start_requests(self):
-        return [scrapy.Request(url=self.url, callback=self.parse, cookies=self.cookies)]
+        return [scrapy.Request(url=self.url, callback=self.parse)]
 
     def parse(self, response):
         for cat in response.css('.mc dd a::attr(href)').re(r'\d+-\d+-\d+'):
@@ -38,8 +38,8 @@ class JdListSpider(scrapy.Spider):
                 cookies = self.get_cookie(response.url)
             else:
                 cookies = {
-                    'listck': '8c1e86ef59a6dc5e6afc7c2144a7dfa3',
-                    '__jda': '122270672.1489342825883952871218.1489342826.1489342826.1489342826.1'
+                    'listck': '8690d16d60884c3c1a24a6c241f5f147',
+                    '__jda': '122270672.1489407850144744927811.1489407850.1489407850.1489407850.1'
                 }
             for page in range(1, int(pages) + 1):
                 cat = response.meta['cat']
@@ -105,7 +105,7 @@ class JdListSpider(scrapy.Spider):
                 if key == price['id']:
                     item['selling_price'] = price['p']
                     item['fix_price'] = price['m']
-                yield item
+            yield item
 
     def get_cookie(self, url):
         service_args = []

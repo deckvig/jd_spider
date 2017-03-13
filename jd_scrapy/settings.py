@@ -140,8 +140,8 @@ WORKING_DIR = 'work/'
 FINISH_DIR = 'down/'
 
 MONGODB = {
-    'SERVER': 'mongo',
-    'PORT': 27017,
+    'SERVER': 'localhost',
+    'PORT': 32770,
     'DB_NAME': 'jd_spider',
     'BOOK_ITEM': 'book_item',
     'BOOK_CAT': 'book_cat'
